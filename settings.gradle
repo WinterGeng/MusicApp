@@ -1,0 +1,5 @@
+include ':lib_video'
+include ':lib_audio'
+include ':imooc_voice'
+include ':app'
+rootProject.name = "Music"
