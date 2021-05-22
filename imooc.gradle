@@ -1,17 +1,19 @@
 ext {
     android = [
             applicationId    : 'com.geng.imooc_voice',
-            compileSdkVersion: 30,
-            minSdkVersion    : 21,
-            targetSdkVersion : 30,
+            compileSdkVersion: 29,
+            minSdkVersion    : 19,
+            targetSdkVersion : 29,
             versionCode      : 1,
             versionName      : '1.0',
             multiDexEnabled  : true
     ]
     depsVersion = [
-            appcompat: '1.2.0'
+            appcompat     : '1.2.0',
+            magicindicator: '1.7.0'
     ]
     depsLibs = [
-            appcompat: "androidx.appcompat:appcompat:${depsVersion.appcompat}"
+            appcompat     : "androidx.appcompat:appcompat:${depsVersion.appcompat}",
+            magicindicator: "com.github.hackware1993:MagicIndicator:${depsVersion.magicindicator}"
     ]
 }

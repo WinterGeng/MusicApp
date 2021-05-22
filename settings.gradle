@@ -1,3 +1,4 @@
+include ':lib_common_ui'
 include ':lib_video'
 include ':lib_audio'
 include ':imooc_voice'

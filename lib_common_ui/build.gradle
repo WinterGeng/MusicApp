@@ -1,21 +1,16 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
 }
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion this.rootProject.android.compileSdkVersion
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId this.rootProject.android.applicationId
         minSdkVersion this.rootProject.android.minSdkVersion
         targetSdkVersion this.rootProject.android.targetSdkVersion
         versionCode this.rootProject.android.versionCode
         versionName this.rootProject.android.versionName
-        multiDexEnabled this.rootProject.android.multiDexEnabled
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -36,10 +31,7 @@ android {
 dependencies {
     implementation this.rootProject.depsLibs.appcompat
     implementation 'com.google.android.material:material:1.2.1'
-    implementation project(path: ':lib_common_ui')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation this.rootProject.depsLibs.magicindicator
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
