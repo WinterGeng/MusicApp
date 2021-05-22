@@ -1,0 +1,17 @@
+ext {
+    android = [
+            applicationId    : 'com.geng.imooc_voice',
+            compileSdkVersion: 30,
+            minSdkVersion    : 21,
+            targetSdkVersion : 30,
+            versionCode      : 1,
+            versionName      : '1.0',
+            multiDexEnabled  : true
+    ]
+    depsVersion = [
+            appcompat: '1.2.0'
+    ]
+    depsLibs = [
+            appcompat: "androidx.appcompat:appcompat:${depsVersion.appcompat}"
+    ]
+}
