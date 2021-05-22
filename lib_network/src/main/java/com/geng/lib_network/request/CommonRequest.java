@@ -1,6 +1,7 @@
 package com.geng.lib_network.request;
 
 import java.util.Map;
+
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.Request;
@@ -26,7 +27,7 @@ public class CommonRequest {
         if (headers != null) {
             for (Map.Entry<String, String> entry : headers.urlParams.entrySet()) {
                 //请求头遍历
-                mFormBodyBuilder.add(entry.getKey(), entry.getValue());
+                mHeaderBuilder.add(entry.getKey(), entry.getValue());
             }
         }
         //构建者模式
@@ -35,5 +36,32 @@ public class CommonRequest {
                 headers(mHeaderBuilder.build()).
                 post(mFormBodyBuilder.build()).build();
         return request;
+    }
+
+    public static Request createGetRequest(String url, RequestParams params) {
+        return createGetRequest(url, params, null);
+    }
+
+    //对外创建get请求对象
+    public static Request createGetRequest(String url, RequestParams params, RequestParams headers) {
+        StringBuilder urlBuilder = new StringBuilder(url).append("?");
+        if (params != null) {
+            for (Map.Entry<String, String> entry : params.urlParams.entrySet()) {
+                //参数遍历
+                urlBuilder.append(entry.getKey()).append("=").append(entry.getValue());
+            }
+        }
+        Headers.Builder mHeaderBuilder = new Headers.Builder();
+        if (headers != null) {
+            for (Map.Entry<String, String> entry : headers.urlParams.entrySet()) {
+                //请求头遍历
+                mHeaderBuilder.add(entry.getKey(), entry.getValue());
+            }
+        }
+        return new Request.Builder().
+                url(url).
+                headers(mHeaderBuilder.build()).
+                get().
+                build();
     }
 }
