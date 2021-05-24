@@ -1,4 +1,4 @@
-package com.geng.lib_network.request;
+package com.geng.lib_network.okhttp.request;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
