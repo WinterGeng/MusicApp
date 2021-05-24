@@ -10,10 +10,14 @@ ext {
     ]
     depsVersion = [
             appcompat     : '1.2.0',
-            magicindicator: '1.7.0'
+            magicindicator: '1.7.0',
+            glide          : '4.9.0',
+            glidecompiler  : '4.9.0'
     ]
     depsLibs = [
             appcompat     : "androidx.appcompat:appcompat:${depsVersion.appcompat}",
-            magicindicator: "com.github.hackware1993:MagicIndicator:${depsVersion.magicindicator}"
+            magicindicator: "com.github.hackware1993:MagicIndicator:${depsVersion.magicindicator}",
+            glide          : "com.github.bumptech.glide:glide:${depsVersion.glide}",
+            glidecompiler  : "com.github.bumptech.glide:compiler:${depsVersion.glidecompiler}"
     ]
 }
