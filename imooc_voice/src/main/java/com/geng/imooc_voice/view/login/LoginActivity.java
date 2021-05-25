@@ -3,6 +3,7 @@ package com.geng.imooc_voice.view.login;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -50,6 +51,9 @@ public class LoginActivity extends BaseActivity implements DisposeDataListener {
 
     @Override
     public void onFailure(Object reasonObj) {
-            //登陆失败逻辑
+        //登陆失败逻辑
+        Exception exception;
+        exception = (Exception) reasonObj;
+        Log.e("TAG", "Login failed:" + exception.getMessage());
     }
 }

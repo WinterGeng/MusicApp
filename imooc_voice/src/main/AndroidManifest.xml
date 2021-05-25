@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.geng.imooc_voice">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <application
         android:name=".application.ImoocVoiceApplication"
         android:allowBackup="true"
@@ -16,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.geng.imooc_voice.view.login.LoginActivity"/>
+        <activity android:name="com.geng.imooc_voice.view.login.LoginActivity" />
     </application>
 
 </manifest>

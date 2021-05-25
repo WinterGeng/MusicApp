@@ -17,7 +17,9 @@ import com.geng.imooc_voice.model.CHANNEL;
 import com.geng.imooc_voice.view.home.adapter.HomePagerAdapter;
 import com.geng.imooc_voice.view.login.LoginActivity;
 import com.geng.imooc_voice.view.login.manager.UserManager;
+import com.geng.imooc_voice.view.login.user.LoginEvent;
 import com.geng.lib_common_ui.base.BaseActivity;
+import com.geng.lib_image_loader.app.ImageLoaderManager;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -26,6 +28,12 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import javax.security.auth.login.LoginException;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private static final CHANNEL[] CHANNELS =
@@ -46,6 +54,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_home);
         initView();
     }
@@ -119,5 +128,20 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
         }
+    }
+
+    //处理登录事件
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginEvent(LoginEvent event) {
+        unLogginLayout.setVisibility(View.GONE);
+        mPhotoView.setVisibility(View.VISIBLE);
+        ImageLoaderManager.getInstance()
+                .displayImageForCircle(mPhotoView, UserManager.getInstance().getUser().data.photoUrl);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
