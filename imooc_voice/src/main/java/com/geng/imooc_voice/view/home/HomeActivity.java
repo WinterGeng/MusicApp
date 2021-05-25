@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -14,6 +15,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.geng.imooc_voice.R;
 import com.geng.imooc_voice.model.CHANNEL;
 import com.geng.imooc_voice.view.home.adapter.HomePagerAdapter;
+import com.geng.imooc_voice.view.login.LoginActivity;
+import com.geng.imooc_voice.view.login.manager.UserManager;
 import com.geng.lib_common_ui.base.BaseActivity;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -54,9 +57,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         mSearchView = findViewById(R.id.search_view);
         mSearchView.setOnClickListener(this);
         mViewPager = findViewById(R.id.view_pager);
-        mAdapter = new HomePagerAdapter(getSupportFragmentManager(),CHANNELS);
+        mAdapter = new HomePagerAdapter(getSupportFragmentManager(), CHANNELS);
         mViewPager.setAdapter(mAdapter);
         initMagicIndicator();
+        //登录相关UI
+        unLogginLayout = findViewById(R.id.unloggin_layout);
+        unLogginLayout.setOnClickListener(this);
+        mPhotoView = findViewById(R.id.avatr_view);
     }
 
     //初始化指示器
@@ -103,6 +110,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.unloggin_layout:
+                if (!UserManager.getInstance().hasLogin()) {
+                    LoginActivity.start(this);
+                } else {
+                    mDrawerLayout.closeDrawer(Gravity.LEFT);
+                }
+                break;
+        }
     }
 }
