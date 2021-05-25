@@ -1,10 +1,13 @@
 package com.geng.lib_image_loader.app;
 
+import android.app.Notification;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -15,7 +18,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.NotificationTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.geng.lib_image_loader.R;
 import com.geng.lib_image_loader.image.Utils;
@@ -102,6 +107,34 @@ public class ImageLoaderManager {
                                 });
                     }
                 });
+    }
+
+    //为Notification中的id控件加载图片
+    public void displayImageForNotification(Context context,
+                                            RemoteViews rv,
+                                            int id,
+                                            Notification notification,
+                                            int NOTIFICATION_ID,
+                                            String url) {
+        this.displayImageForTarget(context, initNotificationTarget(context, rv, id, notification, NOTIFICATION_ID), url);
+    }
+
+    private NotificationTarget initNotificationTarget(Context context, RemoteViews rv, int id, Notification notification, int NOTIFICATION_ID) {
+        NotificationTarget target =
+                new NotificationTarget
+                        (context, id, rv, notification, NOTIFICATION_ID);
+        return target;
+    }
+
+    //为非view加载图片
+    private void displayImageForTarget(Context context, Target target, String url) {
+        Glide.with(context)
+                .asBitmap()
+                .load(url)
+                .apply(initCommonRequestOption())
+                .transition(BitmapTransitionOptions.withCrossFade())
+                .fitCenter()
+                .into(target);
     }
 
     private RequestOptions initCommonRequestOption() {
