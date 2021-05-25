@@ -1,6 +1,6 @@
 package com.geng.imooc_voice.view.login.manager;
 
-import com.geng.imooc_voice.view.login.User;
+import com.geng.imooc_voice.view.login.user.User;
 
 /**
  * 单例管理登录用户信息

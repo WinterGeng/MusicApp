@@ -1,4 +1,4 @@
-package com.geng.imooc_voice.view.login;
+package com.geng.imooc_voice.view.login.user;
 
 /**
  * 用户数据协议
