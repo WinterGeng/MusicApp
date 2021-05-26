@@ -34,7 +34,7 @@ android {
 }
 
 dependencies {
-    implementation this.rootProject.depsLibs.appcompat
+    implementation this.rootProject.depsLibs.appcompact
     implementation 'com.google.android.material:material:1.2.1'
     implementation project(path: ':lib_common_ui')
     implementation project(path: ':lib_network')
@@ -47,4 +47,6 @@ dependencies {
 
     //eventbus类库依赖
     implementation rootProject.depsLibs.eventbus
+    //greendao类库依赖
+    implementation rootProject.depsLibs.greendao
 }
