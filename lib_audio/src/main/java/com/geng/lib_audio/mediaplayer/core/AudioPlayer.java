@@ -8,12 +8,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
-import android.util.EventLog;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.geng.lib_audio.mediaplayer.app.AudioHelper;
+import com.geng.lib_audio.app.AudioHelper;
 import com.geng.lib_audio.mediaplayer.model.AudioBean;
 import com.geng.lib_audio.mediaplayer.model.AudioCompleteEvent;
 import com.geng.lib_audio.mediaplayer.model.AudioErrorEvent;

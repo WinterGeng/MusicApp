@@ -3,6 +3,7 @@ package com.geng.lib_audio.mediaplayer.core;
 import android.content.Context;
 import android.media.AudioManager;
 
+//音频焦点监听类
 public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListener {
 
   private static final String TAG = AudioFocusManager.class.getSimpleName();

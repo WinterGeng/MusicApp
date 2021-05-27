@@ -1,4 +1,4 @@
-package com.geng.lib_audio.mediaplayer.app;
+package com.geng.lib_audio.app;
 
 import android.content.Context;
 
