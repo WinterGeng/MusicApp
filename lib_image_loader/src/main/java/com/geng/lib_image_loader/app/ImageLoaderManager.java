@@ -5,17 +5,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.NotificationTarget;
@@ -23,6 +24,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.geng.lib_image_loader.R;
+import com.geng.lib_image_loader.image.CustomRequestListener;
 import com.geng.lib_image_loader.image.Utils;
 
 import io.reactivex.Observable;
@@ -31,72 +33,92 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade;
+
 /**
- * 图片加载类，与外界的唯一通信类，支持为各种view，motification，appwidget,viewgroup加载图片
+ * 图处加载类，外界唯一调用类,直持为view,notifaication,appwidget加载图片
  */
 public class ImageLoaderManager {
-    private ImageLoaderManager() {
 
+    private ImageLoaderManager() {
+    }
+
+    public static ImageLoaderManager getInstance() {
+        return ImageLoaderManager.SingletonHolder.instance;
     }
 
     private static class SingletonHolder {
         private static ImageLoaderManager instance = new ImageLoaderManager();
     }
 
-    public static ImageLoaderManager getInstance() {
-        return SingletonHolder.instance;
+    /**
+     * 为notification加载图
+     */
+    public void displayImageForNotification(Context context, RemoteViews rv, int id,
+                                            Notification notification, int NOTIFICATION_ID, String url) {
+        this.displayImageForTarget(context,
+                initNotificationTarget(context, id, rv, notification, NOTIFICATION_ID), url);
     }
 
-    //为ImageView加载图片
+    /**
+     * 不带回调的加载
+     */
     public void displayImageForView(ImageView imageView, String url) {
-        Glide.with(imageView.getContext()).
-                asBitmap().
-                load(url).
-                apply(initCommonRequestOption()).
-                //图片加载的切换效果
-                        transition(BitmapTransitionOptions.withCrossFade()).
-                into(imageView);
+        this.displayImageForView(imageView, url, null);
     }
 
-    //为imageview加载圆型图片
-    public void displayImageForCircle(ImageView imageView, String url) {
+    /**
+     * 带回调的加载图片方法
+     */
+    public void displayImageForView(ImageView imageView, String url,
+                                    CustomRequestListener requestListener) {
+        Glide.with(imageView.getContext())
+                .asBitmap()
+                .load(url)
+                .apply(initCommonRequestOption())
+                .transition(withCrossFade())
+                .into(imageView);
+    }
+
+    /**
+     * 带回调的加载图片方法
+     */
+    public void displayImageForCircle(final ImageView imageView, String url) {
         Glide.with(imageView.getContext())
                 .asBitmap()
                 .load(url)
                 .apply(initCommonRequestOption())
                 .into(new BitmapImageViewTarget(imageView) {
-                    //将imageview包装成target
                     @Override
-                    protected void setResource(Bitmap resource) {
-                        super.setResource(resource);
-                        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.
-                                create(imageView.getResources(), resource);
-                        drawable.setCircular(true);
-                        imageView.setImageDrawable(drawable);
+                    protected void setResource(final Bitmap resource) {
+                        RoundedBitmapDrawable circularBitmapDrawable =
+                                RoundedBitmapDrawableFactory.create(imageView.getResources(), resource);
+                        circularBitmapDrawable.setCircular(true);
+                        imageView.setImageDrawable(circularBitmapDrawable);
                     }
                 });
     }
 
-    //完成为viewgroup设置背景并模糊处理
-    public void displayImageForViewGroup(final ViewGroup group, String url, Boolean doBlur) {
+    public void displayImageForViewGroup(final ViewGroup group, String url) {
         Glide.with(group.getContext())
                 .asBitmap()
                 .load(url)
                 .apply(initCommonRequestOption())
-                .into(new SimpleTarget<Bitmap>() {
+                .into(new SimpleTarget<Bitmap>() {//设置宽高
                     @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        //在资源准备好时回调这个方法
-                        final Bitmap bitmap = resource;
-                        Observable.just(resource).map(new Function<Bitmap, Drawable>() {
-                            @Override
-                            public Drawable apply(Bitmap bitmap) throws Exception {
-                                //将bitmap进行模糊处理并转为drawable
-                                Drawable drawable = new BitmapDrawable(
-                                        Utils.doBlur(resource, 100, doBlur));
-                                return drawable;
-                            }
-                        })
+                    public void onResourceReady(@NonNull Bitmap resource,
+                                                @Nullable Transition<? super Bitmap> transition) {
+                        final Bitmap res = resource;
+                        Observable.just(resource)
+                                .map(new Function<Bitmap, Drawable>() {
+                                    @Override
+                                    public Drawable apply(Bitmap bitmap) {
+                                        Drawable drawable = new BitmapDrawable(
+                                                Utils.doBlur(res, 100, true)
+                                        );
+                                        return drawable;
+                                    }
+                                })
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(new Consumer<Drawable>() {
@@ -109,40 +131,42 @@ public class ImageLoaderManager {
                 });
     }
 
-    //为Notification中的id控件加载图片
-    public void displayImageForNotification(Context context,
-                                            RemoteViews rv,
-                                            int id,
-                                            Notification notification,
-                                            int NOTIFICATION_ID,
-                                            String url) {
-        this.displayImageForTarget(context, initNotificationTarget(context, rv, id, notification, NOTIFICATION_ID), url);
-    }
-
-    private NotificationTarget initNotificationTarget(Context context, RemoteViews rv, int id, Notification notification, int NOTIFICATION_ID) {
-        NotificationTarget target =
-                new NotificationTarget
-                        (context, id, rv, notification, NOTIFICATION_ID);
-        return target;
-    }
-
-    //为非view加载图片
+    /**
+     * 为非view加载图片
+     */
     private void displayImageForTarget(Context context, Target target, String url) {
+        this.displayImageForTarget(context, target, url, null);
+    }
+
+    /**
+     * 为非view加载图片
+     */
+    private void displayImageForTarget(Context context, Target target, String url,
+                                       CustomRequestListener requestListener) {
         Glide.with(context)
                 .asBitmap()
                 .load(url)
                 .apply(initCommonRequestOption())
-                .transition(BitmapTransitionOptions.withCrossFade())
+                .transition(withCrossFade())
                 .fitCenter()
+                .listener(requestListener)
                 .into(target);
+    }
+
+    /*
+     * 初始化Notification Target
+     */
+    private NotificationTarget initNotificationTarget(Context context, int id, RemoteViews rv,
+                                                      Notification notification, int NOTIFICATION_ID) {
+        NotificationTarget notificationTarget =
+                new NotificationTarget(context, id, rv, notification, NOTIFICATION_ID);
+        return notificationTarget;
     }
 
     private RequestOptions initCommonRequestOption() {
         RequestOptions options = new RequestOptions();
-        //占位图和错误图
         options.placeholder(R.mipmap.b4y)
                 .error(R.mipmap.b4y)
-                //缓存策略
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .skipMemoryCache(false)
                 .priority(Priority.NORMAL);

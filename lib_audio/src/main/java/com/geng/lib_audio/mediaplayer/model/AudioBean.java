@@ -1,26 +1,18 @@
 package com.geng.lib_audio.mediaplayer.model;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.NotNull;
-import org.greenrobot.greendao.annotation.Unique;
-
 import java.io.Serializable;
 
 /**
  * 1.歌曲实体
  * 2.引入greendao以后扩展了许多
  */
-@Entity
 public class AudioBean implements Serializable {
 
   private static final long serialVersionUID = -8849228294348905620L;
 
-  @Generated(hash = 1701787808)
-  public AudioBean(String id, @NotNull String mUrl, @NotNull String name, @NotNull String author,
-                   @NotNull String album, @NotNull String albumInfo, @NotNull String albumPic,
-                   @NotNull String totalTime) {
+  public AudioBean(String id, String mUrl,String name, String author,
+                   String album, String albumInfo, String albumPic,
+                   String totalTime) {
       this.id = id;
       this.mUrl = mUrl;
       this.name = name;
@@ -31,7 +23,7 @@ public class AudioBean implements Serializable {
       this.totalTime = totalTime;
   }
 
-  @Generated(hash = 1628963493) public AudioBean() {
+  public AudioBean() {
   }
 
   public String getId() {
@@ -98,37 +90,29 @@ public class AudioBean implements Serializable {
     this.totalTime = totalTime;
   }
 
-  @Id
   public String id;
   //地址
-  @NotNull
-  @Unique
   public String mUrl;
 
   //歌名
-  @NotNull
   public String name;
 
   //作者
-  @NotNull
   public String author;
 
   //所属专辑
-  @NotNull
   public String album;
 
-  @NotNull
   public String albumInfo;
 
   //专辑封面
-  @NotNull
   public String albumPic;
 
   //时长
-  @NotNull
   public String totalTime;
 
-  @Override public boolean equals(Object other) {
+  @Override
+  public boolean equals(Object other) {
     if (other == null) {
       return false;
     }

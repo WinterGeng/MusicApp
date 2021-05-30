@@ -55,7 +55,7 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener, MediaPlaye
     //初始化
     private void init() {
         mediaPlayer = new CustomMediaPlayer();
-        mediaPlayer.setWakeMode(null, PowerManager.PARTIAL_WAKE_LOCK);
+        mediaPlayer.setWakeMode(AudioHelper.getContext(), PowerManager.PARTIAL_WAKE_LOCK);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnPreparedListener(this);
